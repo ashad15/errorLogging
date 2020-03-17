@@ -2,7 +2,6 @@ const track =true;
 // Constructor function
 function App (){
     console.log("constructor");
-    // Grab all events
   if(track===true)
   {
     window.addEventListener('error', e => {
