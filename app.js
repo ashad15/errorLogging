@@ -36,7 +36,6 @@ App.prototype.startTracking = function()
 }
 // fn to connect to backend
 App.prototype.sendPayloadToServer = function (e) {
-  console.log(e);
   let xhr = new XMLHttpRequest();
   xhr.open('POST', this.endpoint_url);
   xhr.setRequestHeader("Content-type", "application/json");
@@ -69,8 +68,6 @@ App.prototype.details = function () {
     ua = navigator.userAgent,
     platform = navigator.platform;
   //Internet Explorer
-  console.log("user aagenttt");
-  console.log(ua);
   if (/MSIE/.test(ua)) {
 
     browser = 'Internet Explorer';
@@ -166,7 +163,6 @@ App.prototype.details = function () {
   }
   return (details)
 };
-
 
 module.exports= App;
 
