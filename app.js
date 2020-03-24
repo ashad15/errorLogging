@@ -1,33 +1,33 @@
 
-
-const track = true;
 // Constructor function
-function App() {
-  if (track) {
-    window.addEventListener('error', e => {
-      //to get the deatils of system
-      const getDetails = this.details();
-      this.sendPayloadToServer({
-        //this is the payload
-          errorCode:'',
-          errorMessage: e.error.message,
-          errorLine : e.lineno,
-          browserVersion :getDetails.browserVersion,
-          osDetails: getDetails.osversion,
-          ipAddress: '',
-          userAgent:'',
-          timeOfError:''
-         
-      })
-    })
-  }
+function App(endpoint_url) {
+  this.endpoint_url= endpoint_url;
+
 }
 
+
+App.prototype.startTracking = function()
+{
+    window.addEventListener('error', e => {
+        //to get the deatils of system
+        const getDetails = this.details();
+        this.sendPayloadToServer({
+          //this is the payload
+          errorCode:(e.error? e.error.code:''),
+          errorMessage: e.error.message,
+          errorLine : e.lineno,
+          browserVersion :getDetails.version,
+          osDetails: getDetails.osversion,
+          userAgent: getDetails.ua,
+          timeOfError: Date()
+           
+        })
+      })
+}
 // fn to connect to backend
 App.prototype.sendPayloadToServer = function (e) {
-  const URL = "yet to define";
   let xhr = new XMLHttpRequest();
-  xhr.open('POST', URL);
+  xhr.open('POST', this.endpoint_url);
   xhr.send(e);
   xhr.onerror = function () {
     alert(`Network Error`);
@@ -35,13 +35,16 @@ App.prototype.sendPayloadToServer = function (e) {
 }
 
 // this is the function to untrack
-App.prototype.unmount = function () {
-  track = false;
+App.prototype.stopTracking = (e) => {
+    window.removeEventListener('error');
 }
 // this funtion is still to defined with error properties
-App.prototype.senderror = function () {
-  throw new Error()
-}
+App.prototype.senderror = function (errorCode, errorMessage, errorLine) {
+    const err = new Error(errorMessage);
+    err.code=errorCode;
+    err.lineno= errorLine;
+    throw err;
+  }
 
 // fn to get the details
 App.prototype.details = function () {
@@ -145,18 +148,17 @@ App.prototype.details = function () {
     os = 'Windows';
   }
     const details = {
-    version: version,
-    browser: browser,
-    os: os,
-    osversion: osversion
+    version: browser+version,
+    
+    osversion: os+osversion
   }
   return (details)
 };
 
 
+module.exports= App;
 
 
-
-var app1 = new App();
+//var app1 = new App(url);
+//app1.startTracking();
 // for now this is the just the error created for testing
-print(asdh);

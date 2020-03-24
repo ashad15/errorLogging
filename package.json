@@ -1,0 +1,23 @@
+{
+  "name": "error-logging",
+  "version": "1.0.1",
+  "description": "Package to catch console errors",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashad15/errorLogging.git"
+  },
+  "author": "ashad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashad15/errorLogging/issues"
+  },
+  "homepage": "https://github.com/ashad15/errorLogging#readme",
+  "keywords": [
+    "error",
+    "logging"
+  ]
+}
