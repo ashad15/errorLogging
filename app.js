@@ -1,34 +1,46 @@
-
 // Constructor function
-function App(endpoint_url) {
+function App(endpoint_url) 
+{
   this.endpoint_url= endpoint_url;
-
 }
-
 
 App.prototype.startTracking = function()
 {
     window.addEventListener('error', e => {
-        //to get the deatils of system
+       //to get the deatils of system
         const getDetails = this.details();
-        this.sendPayloadToServer({
-          //this is the payload
-          errorCode:(e.error? e.error.code:''),
-          errorMessage: e.error.message,
+        if(e.message)
+        {
+          // if there is error in code like reference error , type error etc
+          payload={
+          errorMessage: e.message,
           errorLine : e.lineno,
           browserVersion :getDetails.version,
           osDetails: getDetails.osversion,
           userAgent: getDetails.ua,
           timeOfError: Date()
-           
-        })
-      })
+          }
+        }
+        else
+        {// if there is error in get or post req like script loadind, image fail
+          payload={
+            errorMessage: e.target.constructor.name,
+            errorSource : e.target.src,
+            osDetails: getDetails.osversion,
+            userAgent: getDetails.ua,
+            timeOfError: Date()
+            }
+          }
+      this.sendPayloadToServer(payload)
+      }, true)
 }
 // fn to connect to backend
 App.prototype.sendPayloadToServer = function (e) {
+  console.log(e);
   let xhr = new XMLHttpRequest();
   xhr.open('POST', this.endpoint_url);
-  xhr.send(e);
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.send(JSON.stringify(e));
   xhr.onerror = function () {
     alert(`Network Error`);
   };
@@ -55,7 +67,6 @@ App.prototype.details = function () {
     osversion,
     bit,
     ua = navigator.userAgent,
-    
     platform = navigator.platform;
   //Internet Explorer
   console.log("user aagenttt");
@@ -150,7 +161,8 @@ App.prototype.details = function () {
     const details = {
     version: browser+version,
     
-    osversion: os+osversion
+    osversion: os+osversion,
+     ua: ua
   }
   return (details)
 };
@@ -159,6 +171,8 @@ App.prototype.details = function () {
 module.exports= App;
 
 
-//var app1 = new App(url);
-//app1.startTracking();
+//  var app1 = new App();
+//  app1.startTracking();
+//  //app1.senderror();
+//  adfgf(hel);
 // for now this is the just the error created for testing
