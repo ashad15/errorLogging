@@ -7,14 +7,15 @@ function App(endpoint_url)
 App.prototype.startTracking = function()
 {
     window.addEventListener('error', e => {
-       //to get the deatils of system
+      
+        //to get the deatils of system
         const getDetails = this.details();
         if(e.message)
         {
           // if there is error in code like reference error , type error etc
           payload={
           errorMessage: e.message,
-          errorLine : e.lineno,
+          errorSource : e.error.stack,
           browserVersion :getDetails.version,
           osDetails: getDetails.osversion,
           userAgent: getDetails.ua,
@@ -25,7 +26,8 @@ App.prototype.startTracking = function()
         {// if there is error in get or post req like script loadind, image fail
           payload={
             errorMessage: e.target.constructor.name,
-            errorSource : e.target.src,
+            errorSource: e.target.src,
+            browserVersion :getDetails.version,
             osDetails: getDetails.osversion,
             userAgent: getDetails.ua,
             timeOfError: Date()
@@ -170,5 +172,5 @@ module.exports= App;
 //  var app1 = new App();
 //  app1.startTracking();
 //  //app1.senderror();
-//  adfgf(hel);
-// for now this is the just the error created for testing
+// itWillGiveError(hell);
+//for now this is the just the error created for testing
